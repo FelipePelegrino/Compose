@@ -3,28 +3,34 @@ package com.gmail.devpelegrino.composestartertutorial
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.gmail.devpelegrino.composestartertutorial.ui.theme.ComposeStarterTutorialTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MessageCard("vamo que vamo")
+            MessageCard(
+                Message(
+                    author = "Android",
+                    body = "Jetpack Compose"
+                )
+            )
         }
     }
 }
 
+data class Message(val author: String, val body: String)
+
 // Por convenção o padrão Composable começa com PascalCase
 @Composable
-fun MessageCard(name: String) {
-    Text(text = "Hello $name")
+fun MessageCard(message: Message) {
+    Column {
+        Text(text = message.author)
+        Text(text = message.body)
+    }
 }
 
 
@@ -32,6 +38,6 @@ fun MessageCard(name: String) {
 @Preview
 @Composable
 fun PreviewMessageCard() {
-    MessageCard("Olá sou um preview")
+    MessageCard(Message("Lexi", "Hey, take a look at Jetpack Compose, it's great!"))
 }
 
