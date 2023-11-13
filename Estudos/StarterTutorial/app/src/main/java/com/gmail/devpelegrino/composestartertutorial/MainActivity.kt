@@ -31,12 +31,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ComposeStarterTutorialTheme {
                 Surface {
-                    MessageCard(
-                        Message(
-                            author = "Android",
-                            body = "Jetpack Compose"
-                        )
-                    )
+                    Conversation(SampleData.conversationSample)
                 }
             }
         }
