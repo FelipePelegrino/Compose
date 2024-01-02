@@ -3,6 +3,7 @@ package com.gmail.devpelegrino
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -31,12 +32,19 @@ fun MyApp(modifier: Modifier = Modifier) {
         modifier = modifier,
         color = MaterialTheme.colorScheme.background
     ) {
-        Greeting(name = "Composable chamado MyApp está chamando")
+        Greeting(
+            firstText = "Composable chamado MyApp está chamando",
+            secondText = "Linha de baixo"
+        )
     }
 }
 
 @Composable
-private fun Greeting(name: String, modifier: Modifier = Modifier) {
+private fun Greeting(
+    firstText: String,
+    secondText: String,
+    modifier: Modifier = Modifier
+) {
     /*
     * Compose foi construído para simplificar trabalhos comuns no mundo android
     * como por exemplo mudar o cor de fundo, e ter uma cor de texto própria para a cor de fundo
@@ -45,10 +53,10 @@ private fun Greeting(name: String, modifier: Modifier = Modifier) {
     * Pois os componentes bases são construídos sobre componentes fundamentais, esse seria um exemplo.
     * */
     Surface(color = MaterialTheme.colorScheme.primary) {
-        Text(
-            text = "Hello $name!",
-            modifier = Modifier.padding(24.dp)
-        )
+        Column(modifier = Modifier.padding(24.dp)) {
+            Text(text = "Hello $firstText!")
+            Text(text = "Hello $secondText!")
+        }
     }
 
     /*
