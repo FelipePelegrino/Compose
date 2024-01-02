@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -27,22 +28,25 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MyApp(modifier: Modifier = Modifier) {
+fun MyApp(
+    names: List<String> = listOf("Compose", "Kotlin"),
+    modifier: Modifier = Modifier
+) {
     Surface(
         modifier = modifier,
         color = MaterialTheme.colorScheme.background
     ) {
-        Greeting(
-            firstText = "Composable chamado MyApp está chamando",
-            secondText = "Linha de baixo"
-        )
+        Column(Modifier.padding(4.dp)) {
+            for (name in names) {
+                Greeting(name = name)
+            }
+        }
     }
 }
 
 @Composable
 private fun Greeting(
-    firstText: String,
-    secondText: String,
+    name: String,
     modifier: Modifier = Modifier
 ) {
     /*
@@ -52,10 +56,9 @@ private fun Greeting(
     * são utilizados a cor colorScheme.onPrimary.
     * Pois os componentes bases são construídos sobre componentes fundamentais, esse seria um exemplo.
     * */
-    Surface(color = MaterialTheme.colorScheme.primary) {
-        Column(modifier = Modifier.padding(24.dp)) {
-            Text(text = "Hello $firstText!")
-            Text(text = "Hello $secondText!")
+    Surface(color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(8.dp)) {
+        Column(modifier = Modifier.padding(24.dp).fillMaxWidth()) {
+            Text(text = "Hello $name")
         }
     }
 
@@ -65,7 +68,7 @@ private fun Greeting(
     * */
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, widthDp = 320)
 @Composable
 private fun GreetingPreview() {
     BasicsCodelabTheme {
