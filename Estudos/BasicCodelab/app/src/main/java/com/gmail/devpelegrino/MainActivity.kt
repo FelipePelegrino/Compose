@@ -4,9 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -45,30 +46,29 @@ fun MyApp(
 }
 
 @Composable
-private fun Greeting(
-    name: String,
-    modifier: Modifier = Modifier
-) {
-    /*
-    * Compose foi construído para simplificar trabalhos comuns no mundo android
-    * como por exemplo mudar o cor de fundo, e ter uma cor de texto própria para a cor de fundo
-    * É o que acontece nesse exemplo, ao utilizar colorScheme.primary, automaticamente os textos
-    * são utilizados a cor colorScheme.onPrimary.
-    * Pois os componentes bases são construídos sobre componentes fundamentais, esse seria um exemplo.
-    * */
+private fun Greeting(name: String, modifier: Modifier = Modifier) {
     Surface(
         color = MaterialTheme.colorScheme.primary,
         modifier = modifier.padding(vertical = 4.dp, horizontal = 8.dp)
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp)
-        ) {
-            Text(text = "Hello $name")
+        /*
+        * atributo weight pega o maior valor de um composable, e empurra os demais componentes
+        * até o necessário para eles serem exibidos.
+        * */
+        Row(modifier = Modifier.padding(24.dp)) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(text = "Hello ")
+                Text(text = name)
+            }
+            ElevatedButton(
+                onClick = {
+
+                }
+            ) {
+                Text("Show more")
+            }
         }
     }
-
     /*
     * Já o modifier, aplica a organização, display ou comportamento em como meu elemento
     * deve se ser aplicado, DENTRO do layout pai
