@@ -36,7 +36,7 @@ fun MyApp(
         modifier = modifier,
         color = MaterialTheme.colorScheme.background
     ) {
-        Column(Modifier.padding(4.dp)) {
+        Column(Modifier.padding(vertical = 4.dp)) {
             for (name in names) {
                 Greeting(name = name)
             }
@@ -56,8 +56,15 @@ private fun Greeting(
     * são utilizados a cor colorScheme.onPrimary.
     * Pois os componentes bases são construídos sobre componentes fundamentais, esse seria um exemplo.
     * */
-    Surface(color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(8.dp)) {
-        Column(modifier = Modifier.padding(24.dp).fillMaxWidth()) {
+    Surface(
+        color = MaterialTheme.colorScheme.primary,
+        modifier = modifier.padding(vertical = 4.dp, horizontal = 8.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp)
+        ) {
             Text(text = "Hello $name")
         }
     }
