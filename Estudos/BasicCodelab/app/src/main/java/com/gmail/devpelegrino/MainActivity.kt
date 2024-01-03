@@ -36,18 +36,19 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MyApp(
-    names: List<String> = listOf("Compose", "Kotlin"),
-    modifier: Modifier = Modifier
-) {
-    Surface(
-        modifier = modifier,
-        color = MaterialTheme.colorScheme.background
-    ) {
-        Column(Modifier.padding(vertical = 4.dp)) {
-            for (name in names) {
-                Greeting(name = name)
-            }
+fun MyApp(modifier: Modifier = Modifier) {
+    // escrever by remember já delega as funções de propriedade get e set do mutableState
+    var shouldShowOnBoarding by remember { mutableStateOf(true) }
+
+    Surface(modifier) {
+        if (shouldShowOnBoarding) {
+            OnboardingScreen(
+                onContinueClicked = {
+                    shouldShowOnBoarding = false
+                }
+            )
+        } else {
+            Greetings()
         }
     }
 }
@@ -60,8 +61,8 @@ fun MyApp(
 private fun Greeting(name: String, modifier: Modifier = Modifier) {
     // internal state  = private variable
     // Precisamos do remember, para guardar a informação durante a recomposition
-    val expanded = remember { mutableStateOf(false) }
-    val extraPadding = if (expanded.value) 48.dp else 0.dp
+    var expanded by remember { mutableStateOf(false) }
+    val extraPadding = if (expanded) 48.dp else 0.dp
 
     Surface(
         color = MaterialTheme.colorScheme.primary,
@@ -72,18 +73,20 @@ private fun Greeting(name: String, modifier: Modifier = Modifier) {
         * até o necessário para eles serem exibidos.
         * */
         Row(modifier = Modifier.padding(24.dp)) {
-            Column(modifier = Modifier
-                .weight(1f)
-                .padding(bottom = extraPadding)) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(bottom = extraPadding)
+            ) {
                 Text(text = "Hello ")
                 Text(text = name)
             }
             ElevatedButton(
                 onClick = {
-                    expanded.value = !expanded.value
+                    expanded = !expanded
                 }
             ) {
-                if (expanded.value) Text("Show less") else Text("Show more")
+                if (expanded) Text("Show less") else Text("Show more")
             }
         }
     }
@@ -91,6 +94,48 @@ private fun Greeting(name: String, modifier: Modifier = Modifier) {
     * Já o modifier, aplica a organização, display ou comportamento em como meu elemento
     * deve se ser aplicado, DENTRO do layout pai
     * */
+}
+
+@Composable
+fun OnboardingScreen(
+    onContinueClicked: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("Welcome to the Basics Codelab!")
+        Button(
+            modifier = Modifier.padding(vertical = 24.dp),
+            onClick = onContinueClicked
+        ) {
+            Text("Continue")
+        }
+    }
+}
+
+@Composable
+private fun Greetings(
+    modifier: Modifier = Modifier,
+    names: List<String> = listOf("World", "Compose")
+) {
+    Column(modifier = modifier.padding(vertical = 4.dp)) {
+        for (name in names) {
+            Greeting(name = name)
+        }
+    }
+}
+
+@Preview(showBackground = true, widthDp = 320, heightDp = 320)
+@Composable
+fun OnboardingPreview() {
+    BasicsCodelabTheme {
+        OnboardingScreen({
+
+        })
+    }
 }
 
 @Preview(showBackground = true, widthDp = 320)
@@ -101,31 +146,18 @@ private fun GreetingPreview() {
     }
 }
 
+@Preview(showBackground = true, widthDp = 320)
 @Composable
-fun OnboardingScreen(modifier: Modifier = Modifier) {
-    // TODO: This state should be hoisted
-    // escrever by remember já delega as funções de propriedade get e set do mutableState
-    var shouldShowOnboarding by remember { mutableStateOf(true) }
-
-    Column(
-        modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Welcome to the Basics Codelab!")
-        Button(
-            modifier = Modifier.padding(vertical = 24.dp),
-            onClick = { shouldShowOnboarding = false }
-        ) {
-            Text("Continue")
-        }
+fun GreetingsPreview() {
+    BasicsCodelabTheme {
+        Greetings()
     }
 }
 
-@Preview(showBackground = true, widthDp = 320, heightDp = 320)
+@Preview(showBackground = true)
 @Composable
-fun OnboardingPreview() {
+fun MyAppPreview() {
     BasicsCodelabTheme {
-        OnboardingScreen()
+        MyApp(Modifier.fillMaxSize())
     }
 }
