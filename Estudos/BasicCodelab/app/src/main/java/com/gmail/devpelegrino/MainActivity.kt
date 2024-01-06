@@ -37,7 +37,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gmail.devpelegrino.ui.theme.BasicsCodelabTheme
-import com.gmail.devpelegrino.ui.theme.LightBlue
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,80 +67,63 @@ fun MyApp(modifier: Modifier = Modifier) {
     }
 }
 
-/*
-* Diferentes objetos Greeting em tela, são UI diferentes, que contem valores unicos em suas
-* variáveis de estados.
-* */
 @Composable
 private fun Greeting(name: String, modifier: Modifier = Modifier) {
-    // internal state  = private variable
-    // Precisamos do remember, para guardar a informação durante a recomposition
-    var expanded by rememberSaveable { mutableStateOf(false) }
-
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = LightBlue
+            containerColor = MaterialTheme.colorScheme.primary
         ),
-        modifier = modifier
-            .padding(vertical = 4.dp, horizontal = 8.dp)
+        modifier = modifier.padding(vertical = 4.dp, horizontal = 8.dp)
     ) {
-        /*
-        * atributo weight pega o maior valor de um composable, e empurra os demais componentes
-        * até o necessário para eles serem exibidos.
-        * */
-        Row(
-            modifier = Modifier
-                .padding(24.dp)
-                .animateContentSize(
-                    animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioMediumBouncy,
-                        stiffness = Spring.StiffnessLow
-                    )
-                )
+        CardContent(name)
+    }
+}
 
-        ) {
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-            ) {
-                Text(text = "Hello ")
-                Text(
-                    text = name, style = MaterialTheme.typography.headlineMedium.copy(
-                        fontWeight = FontWeight.ExtraBold
-                    )
+@Composable
+private fun CardContent(name: String) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
+
+    Row(
+        modifier = Modifier
+            .padding(12.dp)
+            .animateContentSize(
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                    stiffness = Spring.StiffnessLow
                 )
-                if (expanded) {
-                    Text(text = "Compose ipsum blá blá blá blá blá blá blá blá blá blá")
-                }
-            }
-            IconButton(
-                onClick = {
-                    expanded = !expanded
-                },
-                modifier = modifier.padding(bottom = 24.dp)
-            ) {
-                val contentDescription =
-                    if (expanded) stringResource(R.string.show_less)
-                    else stringResource(R.string.show_more)
-                if (expanded) {
-                    Icon(
-                        imageVector = Icons.Filled.ExpandLess,
-                        contentDescription = contentDescription
-                    )
-                } else {
-                    Icon(
-                        imageVector = Icons.Filled.ExpandMore,
-                        contentDescription = contentDescription
-                    )
-                }
+            )
+    ) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(12.dp)
+        ) {
+            Text(text = "Hello, ")
+            Text(
+                text = name, style = MaterialTheme.typography.headlineMedium.copy(
+                    fontWeight = FontWeight.ExtraBold
+                )
+            )
+            if (expanded) {
+                Text(
+                    text = ("Composem ipsum color sit lazy, " +
+                            "padding theme elit, sed do bouncy. ").repeat(4),
+                )
             }
         }
+        IconButton(onClick = { expanded = !expanded }) {
+            Icon(
+                imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+                contentDescription = if (expanded) {
+                    stringResource(R.string.show_less)
+                } else {
+                    stringResource(R.string.show_more)
+                }
+            )
+        }
     }
-    /*
-    * Já o modifier, aplica a organização, display ou comportamento em como meu elemento
-    * deve se ser aplicado, DENTRO do layout pai
-    * */
 }
+
 
 @Composable
 fun OnboardingScreen(
