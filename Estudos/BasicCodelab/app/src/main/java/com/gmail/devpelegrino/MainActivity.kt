@@ -4,8 +4,8 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,8 +14,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Button
-import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -26,10 +32,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gmail.devpelegrino.ui.theme.BasicsCodelabTheme
+import com.gmail.devpelegrino.ui.theme.LightBlue
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,40 +77,63 @@ private fun Greeting(name: String, modifier: Modifier = Modifier) {
     // internal state  = private variable
     // Precisamos do remember, para guardar a informação durante a recomposition
     var expanded by rememberSaveable { mutableStateOf(false) }
-    val extraPadding by animateDpAsState(
-        targetValue = if (expanded) 48.dp else 0.dp,
-        label = "ExtraPaddingAnimated",
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessLow
-        )
-    )
 
-    Surface(
-        color = MaterialTheme.colorScheme.primary,
-        modifier = modifier.padding(vertical = 4.dp, horizontal = 8.dp)
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = LightBlue
+        ),
+        modifier = modifier
+            .padding(vertical = 4.dp, horizontal = 8.dp)
     ) {
         /*
         * atributo weight pega o maior valor de um composable, e empurra os demais componentes
         * até o necessário para eles serem exibidos.
         * */
-        Row(modifier = Modifier.padding(24.dp)) {
+        Row(
+            modifier = Modifier
+                .padding(24.dp)
+                .animateContentSize(
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                        stiffness = Spring.StiffnessLow
+                    )
+                )
+
+        ) {
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(bottom = extraPadding.coerceAtLeast(0.dp))
             ) {
                 Text(text = "Hello ")
-                Text(text = name, style = MaterialTheme.typography.headlineMedium.copy(
-                    fontWeight = FontWeight.ExtraBold
-                ))
+                Text(
+                    text = name, style = MaterialTheme.typography.headlineMedium.copy(
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                )
+                if (expanded) {
+                    Text(text = "Compose ipsum blá blá blá blá blá blá blá blá blá blá")
+                }
             }
-            ElevatedButton(
+            IconButton(
                 onClick = {
                     expanded = !expanded
-                }
+                },
+                modifier = modifier.padding(bottom = 24.dp)
             ) {
-                if (expanded) Text("Show less") else Text("Show more")
+                val contentDescription =
+                    if (expanded) stringResource(R.string.show_less)
+                    else stringResource(R.string.show_more)
+                if (expanded) {
+                    Icon(
+                        imageVector = Icons.Filled.ExpandLess,
+                        contentDescription = contentDescription
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Filled.ExpandMore,
+                        contentDescription = contentDescription
+                    )
+                }
             }
         }
     }
