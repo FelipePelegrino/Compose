@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "com.gmail.devpelegrino.basicstatecodelab"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.gmail.devpelegrino.basicstatecodelab"
-        minSdk = 21
-        targetSdk = 33
+        minSdk = 27
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
