@@ -109,6 +109,10 @@ class PlantDetailFragment : Fragment() {
                     else -> false
                 }
             }
+
+            composeView.setContent {
+                PlantDetailDescription()
+            }
         }
         setHasOptionsMenu(true)
 
