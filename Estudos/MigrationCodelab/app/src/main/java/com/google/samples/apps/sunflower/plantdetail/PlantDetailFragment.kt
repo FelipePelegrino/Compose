@@ -106,12 +106,13 @@ class PlantDetailFragment : Fragment() {
                         createShareIntent()
                         true
                     }
+
                     else -> false
                 }
             }
 
             composeView.setContent {
-                PlantDetailDescription()
+                PlantDetailDescription(viewModel)
             }
         }
         setHasOptionsMenu(true)
