@@ -53,7 +53,7 @@ fun CraneDrawer(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun CraneDrawerPreview() {
     CraneTheme {
