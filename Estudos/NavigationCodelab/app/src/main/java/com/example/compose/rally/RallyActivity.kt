@@ -107,10 +107,15 @@ fun RallyApp() {
                 * Navigation with args - Obriga passar argumento quando chamar essa rota se não F
                 * A rota/argument define a obrigatoriedade, é um contrato
                 * Arguments, define o nome e o tipo
+                * ---
+                * DeepLinks: Aceita facilmente uma lista de deepLinks implicitos
+                * Deeplinks serão instanciados no formato: scheme://route/arguments
+                * Exemplo: rally://single_account/Checking
                 * */
                 composable(
                     route = SingleAccount.routeWithArgs,
-                    arguments = SingleAccount.arguments
+                    arguments = SingleAccount.arguments,
+                    deepLinks = SingleAccount.deepLinks
                 ) { navBackStackEntry ->
                     /*
                     * Pegando o valor passado para essa rota, no seu arguments, e passando o

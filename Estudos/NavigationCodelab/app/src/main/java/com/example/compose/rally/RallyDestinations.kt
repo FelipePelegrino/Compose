@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.PieChart
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 
 /**
  * Não é boa prática manter elementos compose no no grafo de navegação
@@ -60,6 +61,9 @@ object SingleAccount : RallyDestination {
     val routeWithArgs = "${route}/{${accountTypeArg}}"
     val arguments = listOf(
         navArgument(accountTypeArg) { type = NavType.StringType }
+    )
+    val deepLinks = listOf(
+        navDeepLink { uriPattern = "rally://$route/{$accountTypeArg}" }
     )
 }
 
