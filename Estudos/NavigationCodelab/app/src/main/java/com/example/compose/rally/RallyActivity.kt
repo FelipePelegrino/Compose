@@ -31,6 +31,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.compose.rally.ui.accounts.AccountsScreen
+import com.example.compose.rally.ui.accounts.SingleAccountScreen
 import com.example.compose.rally.ui.bills.BillsScreen
 import com.example.compose.rally.ui.components.RallyTabRow
 import com.example.compose.rally.ui.overview.OverviewScreen
@@ -81,7 +82,9 @@ fun RallyApp() {
                 * */
                 composable(route = Overview.route) {
                     OverviewScreen(
-                        onAccountClick = {},
+                        onAccountClick = { accountType ->
+                            navController.navigateToSingleAccount(accountType)
+                        },
                         onClickSeeAllAccounts = {
                             navController.navigateSingleTopTo(Accounts.route)
                         },
@@ -91,10 +94,32 @@ fun RallyApp() {
                     )
                 }
                 composable(route = Accounts.route) {
-                    AccountsScreen()
+                    AccountsScreen(
+                        onAccountClick = { accountType ->
+                            navController.navigateToSingleAccount(accountType)
+                        }
+                    )
                 }
                 composable(route = Bills.route) {
                     BillsScreen()
+                }
+                /*
+                * Navigation with args - Obriga passar argumento quando chamar essa rota se não F
+                * A rota/argument define a obrigatoriedade, é um contrato
+                * Arguments, define o nome e o tipo
+                * */
+                composable(
+                    route = SingleAccount.routeWithArgs,
+                    arguments = SingleAccount.arguments
+                ) { navBackStackEntry ->
+                    /*
+                    * Pegando o valor passado para essa rota, no seu arguments, e passando o
+                    * composable que será instanciado.
+                    * */
+                    val accountType =
+                        navBackStackEntry.arguments?.getString(SingleAccount.accountTypeArg)
+
+                    SingleAccountScreen(accountType)
                 }
             }
         }
@@ -109,4 +134,8 @@ fun NavHostController.navigateSingleTopTo(route: String) = this.navigate(route) 
     }
     launchSingleTop = true
     restoreState = true
+}
+
+private fun NavHostController.navigateToSingleAccount(accountType: String) {
+    this.navigateSingleTopTo("${SingleAccount.route}/$accountType")
 }
