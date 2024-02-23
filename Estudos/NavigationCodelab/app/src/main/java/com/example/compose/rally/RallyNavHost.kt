@@ -1,14 +1,10 @@
-package com.example.compose.rally.ui
+package com.example.compose.rally
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.compose.rally.Accounts
-import com.example.compose.rally.Bills
-import com.example.compose.rally.Overview
-import com.example.compose.rally.SingleAccount
 import com.example.compose.rally.ui.accounts.AccountsScreen
 import com.example.compose.rally.ui.accounts.SingleAccountScreen
 import com.example.compose.rally.ui.bills.BillsScreen
