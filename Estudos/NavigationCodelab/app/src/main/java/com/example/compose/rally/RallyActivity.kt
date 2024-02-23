@@ -24,17 +24,11 @@ import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.compose.rally.ui.accounts.AccountsScreen
-import com.example.compose.rally.ui.accounts.SingleAccountScreen
-import com.example.compose.rally.ui.bills.BillsScreen
+import com.example.compose.rally.ui.RallyNavHost
 import com.example.compose.rally.ui.components.RallyTabRow
-import com.example.compose.rally.ui.overview.OverviewScreen
+import com.example.compose.rally.ui.navigateSingleTopTo
 import com.example.compose.rally.ui.theme.RallyTheme
 
 /**
@@ -71,76 +65,10 @@ fun RallyApp() {
                 )
             }
         ) { innerPadding ->
-            NavHost(
+            RallyNavHost(
                 navController = navController,
-                startDestination = Overview.route,
                 modifier = Modifier.padding(innerPadding)
-            ) {
-                /*
-                * Primeira tela instanciada no meu NavGraph. Logo, as outras telas principais do app
-                * Assim criamos o navGraph do app, vinculando tela e route.
-                * */
-                composable(route = Overview.route) {
-                    OverviewScreen(
-                        onAccountClick = { accountType ->
-                            navController.navigateToSingleAccount(accountType)
-                        },
-                        onClickSeeAllAccounts = {
-                            navController.navigateSingleTopTo(Accounts.route)
-                        },
-                        onClickSeeAllBills = {
-                            navController.navigateSingleTopTo(Bills.route)
-                        }
-                    )
-                }
-                composable(route = Accounts.route) {
-                    AccountsScreen(
-                        onAccountClick = { accountType ->
-                            navController.navigateToSingleAccount(accountType)
-                        }
-                    )
-                }
-                composable(route = Bills.route) {
-                    BillsScreen()
-                }
-                /*
-                * Navigation with args - Obriga passar argumento quando chamar essa rota se não F
-                * A rota/argument define a obrigatoriedade, é um contrato
-                * Arguments, define o nome e o tipo
-                * ---
-                * DeepLinks: Aceita facilmente uma lista de deepLinks implicitos
-                * Deeplinks serão instanciados no formato: scheme://route/arguments
-                * Exemplo: rally://single_account/Checking
-                * */
-                composable(
-                    route = SingleAccount.routeWithArgs,
-                    arguments = SingleAccount.arguments,
-                    deepLinks = SingleAccount.deepLinks
-                ) { navBackStackEntry ->
-                    /*
-                    * Pegando o valor passado para essa rota, no seu arguments, e passando o
-                    * composable que será instanciado.
-                    * */
-                    val accountType =
-                        navBackStackEntry.arguments?.getString(SingleAccount.accountTypeArg)
-
-                    SingleAccountScreen(accountType)
-                }
-            }
+            )
         }
     }
-}
-
-fun NavHostController.navigateSingleTopTo(route: String) = this.navigate(route) {
-    popUpTo(
-        this@navigateSingleTopTo.graph.findStartDestination().id
-    ) {
-        saveState = true
-    }
-    launchSingleTop = true
-    restoreState = true
-}
-
-private fun NavHostController.navigateToSingleAccount(accountType: String) {
-    this.navigateSingleTopTo("${SingleAccount.route}/$accountType")
 }
