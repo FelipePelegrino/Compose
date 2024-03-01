@@ -134,7 +134,9 @@ private fun PostHeaderImage(post: Post) {
 @Composable
 private fun PostMetadata(metadata: Metadata) {
     val typography = MaterialTheme.typography
-    Row {
+    // toda os filhos desse compose, irão prover o semantics para esse composable, facilitando a
+    // leitura de tela
+    Row(Modifier.semantics(mergeDescendants = true) { }) {
         Image(
             imageVector = Icons.Filled.AccountCircle,
             contentDescription = null,
