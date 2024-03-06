@@ -47,6 +47,7 @@ import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -56,10 +57,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.reply.R
+import com.example.reply.data.local.LocalEmailsDataProvider
+import com.example.reply.ui.theme.ReplyTheme
+import com.example.reply.ui.utils.DevicePosture
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ReplyApp(replyHomeUIState: ReplyHomeUIState) {
+fun ReplyApp(
+    replyHomeUIState: ReplyHomeUIState,
+    windowSize: WindowWidthSizeClass,
+    foldingDevicePosture: DevicePosture,
+) {
     // You will add navigation info here
     ReplyNavigationWrapperUI(replyHomeUIState)
 }
@@ -82,13 +90,19 @@ fun ReplyAppContent(
     replyHomeUIState: ReplyHomeUIState,
     onDrawerClicked: () -> Unit = {}
 ) {
-    Row(modifier = Modifier
-        .fillMaxSize()) {
-        Column(modifier = Modifier
+    Row(
+        modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.inverseOnSurface)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.inverseOnSurface)
         ) {
-            ReplyListOnlyContent(replyHomeUIState = replyHomeUIState, modifier = Modifier.weight(1f))
+            ReplyListOnlyContent(
+                replyHomeUIState = replyHomeUIState,
+                modifier = Modifier.weight(1f)
+            )
             ReplyBottomNavigationBar()
         }
     }
@@ -103,27 +117,47 @@ fun ReplyNavigationRail(
         NavigationRailItem(
             selected = false,
             onClick = onDrawerClicked,
-            icon =  { Icon(imageVector = Icons.Default.Menu, contentDescription = stringResource(id = R.string.navigation_drawer)) }
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Menu,
+                    contentDescription = stringResource(id = R.string.navigation_drawer)
+                )
+            }
         )
         NavigationRailItem(
             selected = true,
             onClick = { /*TODO*/ },
-            icon =  { Icon(imageVector = Icons.Default.Inbox, contentDescription = stringResource(id = R.string.tab_inbox)) }
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Inbox,
+                    contentDescription = stringResource(id = R.string.tab_inbox)
+                )
+            }
         )
         NavigationRailItem(
             selected = false,
             onClick = {/*TODO*/ },
-            icon =  { Icon(imageVector = Icons.Default.Article, stringResource(id = R.string.tab_article)) }
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Article,
+                    stringResource(id = R.string.tab_article)
+                )
+            }
         )
         NavigationRailItem(
             selected = false,
             onClick = { /*TODO*/ },
-            icon =  { Icon(imageVector = Icons.Outlined.Chat, stringResource(id = R.string.tab_dm)) }
+            icon = { Icon(imageVector = Icons.Outlined.Chat, stringResource(id = R.string.tab_dm)) }
         )
         NavigationRailItem(
             selected = false,
             onClick = { /*TODO*/ },
-            icon =  { Icon(imageVector = Icons.Outlined.People, stringResource(id = R.string.tab_groups)) }
+            icon = {
+                Icon(
+                    imageVector = Icons.Outlined.People,
+                    stringResource(id = R.string.tab_groups)
+                )
+            }
         )
     }
 }
@@ -132,25 +166,45 @@ fun ReplyNavigationRail(
 @Preview
 fun ReplyBottomNavigationBar() {
     NavigationBar(modifier = Modifier.fillMaxWidth()) {
-       NavigationBarItem(
-           selected = true,
-           onClick = { /*TODO*/ },
-           icon = { Icon(imageVector = Icons.Default.Inbox, contentDescription = stringResource(id = R.string.tab_inbox)) }
-       )
         NavigationBarItem(
-            selected = false,
+            selected = true,
             onClick = { /*TODO*/ },
-            icon = { Icon(imageVector = Icons.Default.Article, contentDescription = stringResource(id = R.string.tab_inbox)) }
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Inbox,
+                    contentDescription = stringResource(id = R.string.tab_inbox)
+                )
+            }
         )
         NavigationBarItem(
             selected = false,
             onClick = { /*TODO*/ },
-            icon = { Icon(imageVector = Icons.Outlined.Chat, contentDescription = stringResource(id = R.string.tab_inbox)) }
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Article,
+                    contentDescription = stringResource(id = R.string.tab_inbox)
+                )
+            }
         )
         NavigationBarItem(
             selected = false,
             onClick = { /*TODO*/ },
-            icon = { Icon(imageVector = Icons.Outlined.Videocam, contentDescription = stringResource(id = R.string.tab_inbox)) }
+            icon = {
+                Icon(
+                    imageVector = Icons.Outlined.Chat,
+                    contentDescription = stringResource(id = R.string.tab_inbox)
+                )
+            }
+        )
+        NavigationBarItem(
+            selected = false,
+            onClick = { /*TODO*/ },
+            icon = {
+                Icon(
+                    imageVector = Icons.Outlined.Videocam,
+                    contentDescription = stringResource(id = R.string.tab_inbox)
+                )
+            }
         )
     }
 }
@@ -191,29 +245,69 @@ fun NavigationDrawerContent(
 
         NavigationDrawerItem(
             selected = selectedDestination == ReplyDestinations.INBOX,
-            label = { Text(text = stringResource(id = R.string.tab_inbox), modifier = Modifier.padding(horizontal = 16.dp)) },
-            icon = { Icon(imageVector = Icons.Default.Inbox, contentDescription =  stringResource(id = R.string.tab_inbox)) },
+            label = {
+                Text(
+                    text = stringResource(id = R.string.tab_inbox),
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+            },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Inbox,
+                    contentDescription = stringResource(id = R.string.tab_inbox)
+                )
+            },
             colors = NavigationDrawerItemDefaults.colors(unselectedContainerColor = Color.Transparent),
             onClick = { /*TODO*/ }
         )
         NavigationDrawerItem(
             selected = selectedDestination == ReplyDestinations.ARTICLES,
-            label = { Text(text = stringResource(id = R.string.tab_article), modifier = Modifier.padding(horizontal = 16.dp)) },
-            icon = { Icon(imageVector =  Icons.Default.Article, contentDescription =  stringResource(id = R.string.tab_article)) },
+            label = {
+                Text(
+                    text = stringResource(id = R.string.tab_article),
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+            },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Article,
+                    contentDescription = stringResource(id = R.string.tab_article)
+                )
+            },
             colors = NavigationDrawerItemDefaults.colors(unselectedContainerColor = Color.Transparent),
             onClick = { /*TODO*/ }
         )
         NavigationDrawerItem(
             selected = selectedDestination == ReplyDestinations.DM,
-            label = { Text(text = stringResource(id = R.string.tab_dm), modifier = Modifier.padding(horizontal = 16.dp)) },
-            icon = { Icon(imageVector =  Icons.Default.Chat, contentDescription =  stringResource(id = R.string.tab_dm)) },
+            label = {
+                Text(
+                    text = stringResource(id = R.string.tab_dm),
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+            },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Chat,
+                    contentDescription = stringResource(id = R.string.tab_dm)
+                )
+            },
             colors = NavigationDrawerItemDefaults.colors(unselectedContainerColor = Color.Transparent),
             onClick = { /*TODO*/ }
         )
         NavigationDrawerItem(
             selected = selectedDestination == ReplyDestinations.GROUPS,
-            label = { Text(text = stringResource(id = R.string.tab_groups), modifier = Modifier.padding(horizontal = 16.dp)) },
-            icon = { Icon(imageVector =  Icons.Default.Article, contentDescription =  stringResource(id = R.string.tab_groups)) },
+            label = {
+                Text(
+                    text = stringResource(id = R.string.tab_groups),
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+            },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Article,
+                    contentDescription = stringResource(id = R.string.tab_groups)
+                )
+            },
             colors = NavigationDrawerItemDefaults.colors(unselectedContainerColor = Color.Transparent),
             onClick = { /*TODO*/ }
         )
