@@ -63,10 +63,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.reply.R
 import com.example.reply.ui.utils.DevicePosture
+import com.example.reply.ui.utils.ReplyContentType
 import com.example.reply.ui.utils.ReplyNavigationType
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReplyApp(
     replyHomeUIState: ReplyHomeUIState,
@@ -74,14 +74,23 @@ fun ReplyApp(
     foldingDevicePosture: DevicePosture,
 ) {
     val navigationType: ReplyNavigationType
+    val contentType: ReplyContentType
 
     when (windowSize) {
         WindowWidthSizeClass.Compact -> {
             navigationType = ReplyNavigationType.BOTTOM_NAVIGATION
+            contentType = ReplyContentType.LIST_ONLY
         }
 
         WindowWidthSizeClass.Medium -> {
             navigationType = ReplyNavigationType.NAVIGATION_RAIL
+            contentType = if (foldingDevicePosture is DevicePosture.BookPosture
+                || foldingDevicePosture is DevicePosture.Separating
+            ) {
+                ReplyContentType.LIST_AND_DETAIL
+            } else {
+                ReplyContentType.LIST_ONLY
+            }
         }
 
         WindowWidthSizeClass.Expanded -> {
@@ -90,19 +99,23 @@ fun ReplyApp(
             } else {
                 ReplyNavigationType.PERMANENT_NAVIGATION_DRAWER
             }
+            contentType = ReplyContentType.LIST_AND_DETAIL
         }
 
         else -> {
             navigationType = ReplyNavigationType.BOTTOM_NAVIGATION
+            contentType = ReplyContentType.LIST_ONLY
         }
     }
 
-    ReplyNavigationWrapperUI(navigationType, replyHomeUIState)
+    ReplyNavigationWrapperUI(navigationType, contentType, replyHomeUIState)
+
 }
 
 @Composable
 private fun ReplyNavigationWrapperUI(
     navigationType: ReplyNavigationType,
+    contentType: ReplyContentType,
     replyHomeUIState: ReplyHomeUIState
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -117,7 +130,7 @@ private fun ReplyNavigationWrapperUI(
                 }
             }
         ) {
-            ReplyAppContent(navigationType, replyHomeUIState)
+            ReplyAppContent(navigationType, contentType, replyHomeUIState)
         }
     } else {
         ModalNavigationDrawer(
@@ -136,7 +149,9 @@ private fun ReplyNavigationWrapperUI(
             drawerState = drawerState
         ) {
             ReplyAppContent(
-                navigationType, replyHomeUIState,
+                navigationType,
+                contentType,
+                replyHomeUIState,
                 onDrawerClicked = {
                     scope.launch {
                         drawerState.open()
@@ -147,9 +162,11 @@ private fun ReplyNavigationWrapperUI(
     }
 }
 
+
 @Composable
 fun ReplyAppContent(
     navigationType: ReplyNavigationType,
+    contentType: ReplyContentType,
     replyHomeUIState: ReplyHomeUIState,
     onDrawerClicked: () -> Unit = {}
 ) {
@@ -164,10 +181,17 @@ fun ReplyAppContent(
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.inverseOnSurface)
         ) {
-            ReplyListOnlyContent(
-                replyHomeUIState = replyHomeUIState,
-                modifier = Modifier.weight(1f)
-            )
+            if (contentType == ReplyContentType.LIST_AND_DETAIL) {
+                ReplyListAndDetailContent(
+                    replyHomeUIState = replyHomeUIState,
+                    modifier = Modifier.weight(1f),
+                )
+            } else {
+                ReplyListOnlyContent(
+                    replyHomeUIState = replyHomeUIState,
+                    modifier = Modifier.weight(1f)
+                )
+            }
 
             AnimatedVisibility(visible = navigationType == ReplyNavigationType.BOTTOM_NAVIGATION) {
                 ReplyBottomNavigationBar()
